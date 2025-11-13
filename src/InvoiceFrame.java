@@ -58,6 +58,7 @@ public class InvoiceFrame extends JFrame {
         quantityInput = new JTextField(5);
 
         addItemButton = new JButton("Add Item");
+        addItemButton.addActionListener(e -> handleAddItem());
 
         inputPanel.add(nameLabel);
         inputPanel.add(productNameInput);
@@ -94,5 +95,46 @@ public class InvoiceFrame extends JFrame {
         invoicePanel.add(totalLabel, BorderLayout.SOUTH);
 
         add(invoicePanel, BorderLayout.CENTER);
+    }
+
+    private void handleAddItem () {
+        String name = productNameInput.getText();
+        String priceText = unitPriceInput.getText();
+        String quantityText = quantityInput.getText();
+
+        double price = Double.parseDouble(priceText);
+        int quantity = Integer.parseInt(quantityText);
+
+        Product product = new Product(name, price);
+        LineItem lineItem = new LineItem(product, quantity);
+
+        invoice.addLineItem(lineItem);
+
+        updateDisplay();
+
+        productNameInput.setText("");
+        unitPriceInput.setText("");
+        quantityInput.setText("");
+    }
+
+    private void updateDisplay () {
+        invoiceTextArea.setText("");
+
+        StringBuilder display = new StringBuilder();
+
+        for (LineItem item : invoice.getLineItems()) {
+            String name = item.getProduct().getName();
+            double price = item.getProduct().getUnitPrice();
+            int quantity = item.getQuantity();
+
+            double lineTotal = item.getTotal();
+
+            display.append(String.format("%s x%d @ $%.2f = $%.2f\n",
+                    name, quantity, price, lineTotal));
+        }
+
+        invoiceTextArea.setText(display.toString());
+
+        totalLabel.setText(String.format("Total: $%.2f", invoice.getTotal()));
     }
 }
