@@ -102,19 +102,36 @@ public class InvoiceFrame extends JFrame {
         String priceText = unitPriceInput.getText();
         String quantityText = quantityInput.getText();
 
-        double price = Double.parseDouble(priceText);
-        int quantity = Integer.parseInt(quantityText);
+        if (name.isBlank() || priceText.isBlank() || quantityText.isBlank()) {
+            JOptionPane.showMessageDialog(this,
+                    "Must fill all fields to add item.",
+                    "Warning",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
 
-        Product product = new Product(name, price);
-        LineItem lineItem = new LineItem(product, quantity);
+        try {
+            double price = Double.parseDouble(priceText);
+            int quantity = Integer.parseInt(quantityText);
 
-        invoice.addLineItem(lineItem);
+            Product product = new Product(name, price);
+            LineItem lineItem = new LineItem(product, quantity);
 
-        updateDisplay();
+            invoice.addLineItem(lineItem);
 
-        productNameInput.setText("");
-        unitPriceInput.setText("");
-        quantityInput.setText("");
+            updateDisplay();
+
+            productNameInput.setText("");
+            unitPriceInput.setText("");
+            quantityInput.setText("");
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Price must be a valid number and quantity must be a whole number.",
+                    "Invalid Input",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
 
     private void updateDisplay () {
