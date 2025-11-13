@@ -4,8 +4,8 @@ public class Invoice {
     private ArrayList<LineItem> lineItems;
 
     // Constructor
-    public Invoice (ArrayList<LineItem> lineItems) {
-        this.lineItems = lineItems;
+    public Invoice () {
+        lineItems = new ArrayList<LineItem>();
     }
 
     // Getters
